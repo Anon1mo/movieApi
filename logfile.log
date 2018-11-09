@@ -1,0 +1,8 @@
+{"level":"error","message":"cyclic dependency detected"}
+{"level":"error","message":"cyclic dependency detected"}
+{"level":"error","message":"cyclic dependency detected"}
+{"level":"error","message":"cyclic dependency detected"}
+{"level":"error","message":"cyclic dependency detected"}
+{"level":"error","message":"cyclic dependency detected"}
+{"level":"error","message":"Argument passed in must be a single String of 12 bytes or a string of 24 hex characters"}
+{"expose":true,"statusCode":400,"status":400,"body":"{\n\t\"movieId\": \"5be6056b1bf5c527725e6cb6\",\n\t\"comment\": \"\",\n}","type":"entity.parse.failed","level":"error","message":"Unexpected token } in JSON at position 58"}
