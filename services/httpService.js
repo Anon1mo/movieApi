@@ -1,8 +1,9 @@
 const axios = require('axios');
 
-const apiUrl = `${process.env.API_URL}`;
+const apiUrl = 'http://www.omdbapi.com/';
 
 axios.defaults.baseURL = apiUrl;
+axios.defaults.params = { apiKey: process.env.API_KEY };
 axios.interceptors.response.use(null, error => {
 	const expectedError =
 		error.response &&

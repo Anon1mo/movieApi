@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const db = require('../db');
+const db = require('../startup/db');
 const validate = require('../middleware/validate');
 const commentValidator = require('../validators/comment');
 const router = new Router();

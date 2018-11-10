@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const db = require('../db');
+const db = require('../startup/db');
 const validate = require('../middleware/validate');
 const movieValidator = require('../validators/movie');
 const movieService = require('../services/movieService');
@@ -16,10 +16,13 @@ router.get('/', async (req, res) => {
 
 router.post('/', validate(movieValidator), async (req, res) => {
 	const { title } = req.body;
-	if (typeof title !== 'string') {
-		res
-			.status(400)
-			.send('Title is not sent in a good format. Use string instead');
+
+	const movieAlreadyExists = movieCollection.countDocuments(
+		{ title },
+		{ limit: 1 }
+	);
+	if (movieAlreadyExists) {
+		return res.status(400).send('Movie already exists in a database');
 	}
 
 	let movie;
