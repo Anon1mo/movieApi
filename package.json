@@ -4,11 +4,15 @@
   "description": "allows access to information about movies",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js --exec 'npm run pretest && node'",
+    "start": "node index.js",
+		"start:watch": "nodemon index.js --exec 'npm run pretest && node'",
 		"pretest": "eslint --ignore-path .gitignore .",
     "test": "jest",
 		"test:watch": "jest --watch"
   },
+	"engines": {
+		"node": "8.9.1"
+	},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Anon1mo/movieApi.git"
