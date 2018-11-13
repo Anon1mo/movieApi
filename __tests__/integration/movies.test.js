@@ -4,9 +4,7 @@ const { isValidObjectId } = require('../../startup/db');
 
 jest.mock('../../services/movieService', () => {
 	return {
-		getMovie: jest.fn(movie =>
-			Promise.resolve({ data: { Title: `Janusz${movie}` } })
-		)
+		getMovie: jest.fn(movie => Promise.resolve({ data: { Title: movie } }))
 	};
 });
 
@@ -50,7 +48,7 @@ describe('movie API', () => {
 		});
 	});
 
-	test('cannot post the same movie twice using the API', async () => {
+	test.only('cannot post the same movie twice using the API', async () => {
 		const movieTitle = 'Zelig';
 		const { movieId, cleanup } = await createNewMovie(movieTitle);
 		expect(isValidObjectId(movieId)).toBe(true);
