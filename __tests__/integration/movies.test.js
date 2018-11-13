@@ -48,7 +48,7 @@ describe('movie API', () => {
 		});
 	});
 
-	test.only('cannot post the same movie twice using the API', async () => {
+	test('cannot post the same movie twice using the API', async () => {
 		const movieTitle = 'Zelig';
 		const { movieId, cleanup } = await createNewMovie(movieTitle);
 		expect(isValidObjectId(movieId)).toBe(true);
