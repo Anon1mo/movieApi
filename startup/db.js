@@ -1,7 +1,7 @@
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 
-const dbName = 'movieApi';
+//const dbName = 'movieApi';
 let _db;
 module.exports = {
 	connect(url) {

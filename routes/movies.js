@@ -2,6 +2,7 @@ const { Router } = require('express');
 const db = require('../startup/db');
 const validate = require('../middleware/validate');
 const movieValidator = require('../validators/movie');
+const validateObjectId = require('../middleware/validateObjectId');
 const movieService = require('../services/movieService');
 const router = new Router();
 
@@ -17,8 +18,8 @@ router.get('/', async (req, res) => {
 router.post('/', validate(movieValidator), async (req, res) => {
 	const { title } = req.body;
 
-	const movieAlreadyExists = movieCollection.countDocuments(
-		{ title },
+	const movieAlreadyExists = await movieCollection.countDocuments(
+		{ Title: title },
 		{ limit: 1 }
 	);
 	if (movieAlreadyExists) {
@@ -32,8 +33,21 @@ router.post('/', validate(movieValidator), async (req, res) => {
 		return res.status(404).send(ex.error);
 	}
 
-	await movieCollection.insertOne(movie.data);
-	res.status(201).send('A movie was successfully added to the database');
+	const { insertedId: insertedMovieId } = await movieCollection.insertOne(
+		movie.data
+	);
+	res.status(201).send(insertedMovieId);
+});
+
+router.delete('/:id', validateObjectId, async (req, res) => {
+	const movie = await movieCollection.deleteOne({
+		_id: db.createObjectId(req.params.id)
+	});
+
+	if (!movie)
+		return res.status(404).send('The movie with the given ID was not found');
+
+	res.send(movie);
 });
 
 module.exports = router;

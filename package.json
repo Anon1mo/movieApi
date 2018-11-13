@@ -4,8 +4,10 @@
   "description": "allows access to information about movies",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon index.js --exec 'npm run pretest && node'",
+		"pretest": "eslint --ignore-path .gitignore .",
+    "test": "jest",
+		"test:watch": "jest --watch"
   },
   "repository": {
     "type": "git",
@@ -30,7 +32,12 @@
     "winston": "^3.1.0"
   },
   "devDependencies": {
+    "eslint": "^5.9.0",
+    "jest": "^23.6.0",
     "morgan": "^1.9.1",
     "prettier": "^1.15.1"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
