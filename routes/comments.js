@@ -2,6 +2,7 @@ const { Router } = require('express');
 const db = require('../startup/db');
 const validate = require('../middleware/validate');
 const commentValidator = require('../validators/comment');
+const validateObjectId = require('../middleware/validateObjectId');
 const router = new Router();
 
 const collectionName = __filename.slice(__dirname.length + 1, -3); // get filename without directory or extension
@@ -15,12 +16,24 @@ router.get('/', async (req, res) => {
 
 router.post('/', validate(commentValidator), async (req, res) => {
 	const { movieId, comment } = req.body;
-	// check if id is valid and comment is not too long
 	const commentObj = { movieId: db.createObjectId(movieId), comment };
 
-	await commentsCollection.insertOne(commentObj);
+	const { insertedId: insertedCommentId } = await commentsCollection.insertOne(
+		commentObj
+	);
 
-	res.status(201).send();
+	res.status(201).send(insertedCommentId);
+});
+
+router.delete('/:id', validateObjectId, async (req, res) => {
+	const comment = await commentsCollection.deleteOne({
+		_id: db.createObjectId(req.params.id)
+	});
+
+	if (comment.result.n === 0)
+		return res.status(404).send('The comment with the given ID was not found');
+
+	res.send(comment);
 });
 
 module.exports = router;

@@ -58,17 +58,6 @@ describe('movie API', () => {
 
 		await cleanup();
 	});
-
-	async function createNewMovie(title) {
-		const { data: movieId } = await api.post('movies', { title });
-
-		return {
-			movieId,
-			cleanup() {
-				return api.delete(`movies/${movieId}`);
-			}
-		};
-	}
 });
 
 describe('comments API', () => {
@@ -80,4 +69,69 @@ describe('comments API', () => {
 			});
 		});
 	});
+
+	test('can post post a valid comment to a movie', async () => {
+		const movieTitle = 'Sleeper';
+		const movieManager = await createNewMovie(movieTitle);
+		const comment = {
+			movieId: movieManager.movieId,
+			comment: 'test'
+		};
+
+		const commentManager = await createNewComment(comment);
+		expect(isValidObjectId(commentManager.commentId)).toBe(true);
+
+		await movieManager.cleanup();
+		await commentManager.cleanup();
+	});
+
+	test('cannot post a valid comment to the movie, which does not exist', async () => {
+		const comment = {
+			movieId: '1234',
+			comment: 'test'
+		};
+
+		await createNewComment(comment).catch(err => {
+			expect(err.response.status).toBe(400);
+		});
+	});
+
+	test('cannot post a too long comment to the movie', async () => {
+		const movieTitle = 'Sleeper';
+		const movieManager = await createNewMovie(movieTitle);
+		const comment = {
+			movieId: movieManager.movieId,
+			comment: `Lorem ipsum dolor sit amet, vim elit scaevola at, vix ei vide fierent argumentum. 
+								Paulo definiebas id qui, ius in deserunt euripidis similique, sed cu accusata ocurreret.
+				 				Purto definitiones delicatissimi et ius. Adhuc vituperatoribus no nec. Utroque appetere
+				  			qui ad, eu eos purto quaestio.`
+		};
+
+		await createNewComment(comment).catch(err => {
+			expect(err.response.status).toBe(400);
+		});
+
+		await movieManager.cleanup();
+	});
 });
+
+async function createNewMovie(title) {
+	const { data: movieId } = await api.post('movies', { title });
+
+	return {
+		movieId,
+		cleanup() {
+			return api.delete(`movies/${movieId}`);
+		}
+	};
+}
+
+async function createNewComment(comment) {
+	const { data: commentId } = await api.post('comments', comment);
+	return {
+		commentId,
+		cleanup() {
+			return api.delete(`comments/${commentId}`);
+		}
+	};
+}

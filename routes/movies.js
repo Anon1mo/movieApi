@@ -44,7 +44,7 @@ router.delete('/:id', validateObjectId, async (req, res) => {
 		_id: db.createObjectId(req.params.id)
 	});
 
-	if (!movie)
+	if (movie.result.n === 0)
 		return res.status(404).send('The movie with the given ID was not found');
 
 	res.send(movie);
